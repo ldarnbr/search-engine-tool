@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import random
+from urllib.parse import urljoin
 
 """
 Using a class means that the crawler can manage its state, keeping track
@@ -37,6 +39,7 @@ class Crawler:
 
     # Continue until all new pages are explored
     # Note: Perhaps restrict this to a specific number of travels?
+    # would prevent struggles with fictitious resources.
     while self.new_pages:
       # FIFO ordering of exploration - also pops url off the list
       url = self.to_visit.pop(0)
@@ -49,10 +52,27 @@ class Crawler:
       content = self.fetch_page(url)
 
       if content:
-        # Extract words
+        # Extract all text from the page and seperate words by spaces.
+        # Also strips all the HTML tags
+        page_text = content.get_text(seperator='', strip=True)
+        print(f"Extracted {len(page_text.split())} words.")
+
         # Extract new pages
-        self.visited_pages.add(url)
-        print("Waiting to grab another page")
-        time.sleep(6)
+        # Looks at all the anchor tags and grabs the associated href
+        # relative url
+        for link in content.find_all('a'):
+          href = link.get('href')
 
+          # Conversion to absolute url
+          if href:
+            absolute_url = urljoin(url, href)
 
+            if absolute_url not in self.visited_pages and absolute_url not in self.new_pages:
+              self.new_pages.append(absolute_url)
+         
+        self.visited_pages.add(absolute_url)
+
+      # Randomise the sleep time to avoid crawler being detected.
+      sleep_time = random.uniform(6, 9)
+      print(f"Waiting {sleep_time:.2f} seconds for politeness")
+      time.sleep(sleep_time)
