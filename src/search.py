@@ -29,13 +29,13 @@ class SearchEngine:
       # with the other sets of URLs
       matched_url_set = set(words_urls[0].keys())
 
-      for data in words_urls[1:]:
-        # Intersect with the next words urls
-        next_urls = set(data.keys())
-        matched_url_set = matched_url_set.intersection(next_urls)
+    for data in words_urls[1:]:
+      # Intersect with the next words urls
+      next_urls = set(data.keys())
+      matched_url_set = matched_url_set.intersection(next_urls)
 
-        # Stop comparing if any dont have an intersection
-        if not matched_url_set:
-          break
-      
-      return list(matched_url_set)
+      # Stop comparing if any dont have an intersection
+      if not matched_url_set:
+        break
+    
+    return list(matched_url_set)

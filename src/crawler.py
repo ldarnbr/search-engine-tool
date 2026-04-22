@@ -11,7 +11,8 @@ this context without messy passing of lists back and forth every time functions
 are called.
 """
 class Crawler:
-  def __init__(self):
+  def __init__(self, indexer):
+    self.indexer = indexer
     self.new_pages = []
     # Need to store visited pages to prevent pages that link back
     # to eachother causing an infinite loop.
@@ -32,17 +33,18 @@ class Crawler:
       print(f"Error occured fetching {url}: {e}")
       return None
   
-  def crawl(self, first_url):
+  def crawl(self, first_url, max_pages=10):
     """
+    Traverse the urls and extract the text.
     """
     self.new_pages.append(first_url)
 
     # Continue until all new pages are explored
     # Note: Perhaps restrict this to a specific number of travels?
     # would prevent struggles with fictitious resources.
-    while self.new_pages:
+    while self.new_pages and len(self.visited_pages) < max_pages:
       # FIFO ordering of exploration - also pops url off the list
-      url = self.to_visit.pop(0)
+      url = self.new_pages.pop(0)
 
       # skip past visited pages
       if url in self.visited_pages:
@@ -54,8 +56,10 @@ class Crawler:
       if content:
         # Extract all text from the page and seperate words by spaces.
         # Also strips all the HTML tags
-        page_text = content.get_text(seperator='', strip=True)
+        page_text = content.get_text(separator=' ', strip=True)
         print(f"Extracted {len(page_text.split())} words.")
+
+        self.indexer.add_page(url, page_text)
 
         # Extract new pages
         # Looks at all the anchor tags and grabs the associated href
@@ -70,7 +74,7 @@ class Crawler:
             if absolute_url not in self.visited_pages and absolute_url not in self.new_pages:
               self.new_pages.append(absolute_url)
          
-        self.visited_pages.add(absolute_url)
+      self.visited_pages.add(url)
 
       # Randomise the sleep time to avoid crawler being detected.
       sleep_time = random.uniform(6, 9)
