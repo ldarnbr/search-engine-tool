@@ -67,7 +67,24 @@ class TestCrawler(unittest.TestCase):
 
     # Explored URL's should be added to the seen list
     self.assertIn("http://test.com/relative", self.crawler.new_pages)
-  
+
+  # Tests that the crawler recursively explores pages
+  @patch('src.crawler.requests.get')
+  @patch('src.crawler.time.sleep')
+  def test_crawler_recursion(self, mock_sleep, mock_get):
+    response = MagicMock()
+    response.status_code = 200
+    response.text = '<html><head></head><body><h1><a href="relative">Company Name</a></h1></body></html>'
+    mock_get.return_value = response
+
+    self.crawler.crawl("http://test.com", max_pages=5)
+
+    # Explored URL's should be added to the seen list
+    # Mocking serves the same text each time, but the crawler should be robust
+    # enough to see that the new href URL is already in the visited pages and quit.
+    self.assertIn("http://test.com", self.crawler.visited_pages)
+    self.assertIn("http://test.com/relative", self.crawler.visited_pages)
+
   # Tests the crawler hands the text to the indexer
   @patch('src.crawler.requests.get')
   @patch('src.crawler.time.sleep')
@@ -82,7 +99,6 @@ class TestCrawler(unittest.TestCase):
     # Check that the crawler gave the indexer the company word and its associated URL
     company_check = self.indexer.get_word("company")
     self.assertIn("http://test.com", company_check)
-
 
 if __name__ == '__main__':
   unittest.main()
