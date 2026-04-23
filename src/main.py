@@ -55,7 +55,7 @@ def main():
         print("Please provide a word or phrase to see a list of urls where they occur.")
     
     else:
-      print("Command not valid. Available commands: build, load, print, find, quit.")
+      print("Command not valid. Available commands: build, load, print, find.")
 
 if __name__ == "__main__":
   main()
