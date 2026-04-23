@@ -9,10 +9,7 @@ Potential problems:
 2. Need to check if theres an argument after load and tell user there cant be
 3. Need to check if theres an argument after build and tell user there cant be
 4. Should numeric arguments be allowed? Need to sanitise arguments
-
 """
-
-
 def main():
   indexer = Indexer()
   search_engine = SearchEngine(indexer)

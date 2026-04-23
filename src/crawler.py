@@ -28,9 +28,9 @@ class Crawler:
       if response.status_code == 200:
         return BeautifulSoup(response.text, 'html.parser')
       else:
-        print(f"{response.status_code}: Error when fetching {url}")
+        print(f"{response.status_code}: Error when fetching {url}\n")
     except Exception as e:
-      print(f"Error occured fetching {url}: {e}")
+      print(f"Error occured fetching {url}: {e}\n")
       return None
   
   def crawl(self, first_url, max_pages=10):
@@ -50,14 +50,14 @@ class Crawler:
       if url in self.visited_pages:
         continue
 
-      print(f"Visiting: {url}")
+      print(f"Visiting: {url}\n")
       content = self.fetch_page(url)
 
       if content:
         # Extract all text from the page and seperate words by spaces.
         # Also strips all the HTML tags
         page_text = content.get_text(separator=' ', strip=True)
-        print(f"Extracted {len(page_text.split())} words.")
+        print(f"Extracted {len(page_text.split())} words.\n")
 
         self.indexer.add_page(url, page_text)
 
@@ -78,5 +78,5 @@ class Crawler:
 
       # Randomise the sleep time to avoid crawler being detected.
       sleep_time = random.uniform(6, 9)
-      print(f"Waiting {sleep_time:.2f} seconds for politeness")
+      print(f"Waiting {sleep_time:.2f} seconds for politeness\n")
       time.sleep(sleep_time)
