@@ -3,13 +3,6 @@ from crawler import Crawler
 from indexer import Indexer
 from search import SearchEngine
 
-"""
-Potential problems:
-1. Can .lower() work on a user input thats just numbers?
-2. Need to check if theres an argument after load and tell user there cant be
-3. Need to check if theres an argument after build and tell user there cant be
-4. Should numeric arguments be allowed? Need to sanitise arguments
-"""
 def main():
   indexer = Indexer()
   search_engine = SearchEngine(indexer)
@@ -30,15 +23,20 @@ def main():
       argument = ""
 
     if command == 'load':
-      indexer.load()
-      print("Index loaded")
+      if argument:
+        print("Error: the 'load' command takes no arguments.")
+      else:
+        indexer.load()
+        print("Index loaded")
 
     elif command == 'build':
-      crawler = Crawler(indexer)
-      crawler.crawl('https://quotes.toscrape.com/')
-
-      indexer.save()
-      print("Build completed successfully")
+      if argument:
+        print("Error: the 'build' command takes no arguments.")
+      else:
+        crawler = Crawler(indexer)
+        crawler.crawl('https://quotes.toscrape.com/')
+        indexer.save()
+        print("Build completed successfully")
 
     elif command == 'print':
       if argument:
