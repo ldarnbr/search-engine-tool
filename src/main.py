@@ -32,7 +32,6 @@ def main():
     else:
       argument = ""
 
-
     if command == 'load':
       indexer.load()
       print("Index loaded")
