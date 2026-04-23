@@ -25,6 +25,7 @@ class Indexer:
 
   def add_page(self, url, text):
     """
+    Builds the reverse index by recording frequency and word position stats.
 
     """
     text = text.lower()

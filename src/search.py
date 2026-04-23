@@ -5,6 +5,12 @@ class SearchEngine:
     self.indexer = indexer
 
   def find(self, phrase):
+    """
+    Finds multiple word phrases by building lists for each individual word,
+    then sorts these lists from smallest to largest in terms of URL count.
+    The URL sets are compared to each other to find intersections, returning
+    only URLs intersecting with all words.
+    """
     cleaned_phrase = re.sub(r'[^\w\s]', '', phrase.lower())
     words = cleaned_phrase.split()
 

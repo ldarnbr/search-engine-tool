@@ -53,7 +53,7 @@ def main():
           print(f" - {url}")
       else:
         print("Please provide a word or phrase to see a list of urls where they occur.")
-    
+
     else:
       print("Command not valid. Available commands: build, load, print, find.")
 
