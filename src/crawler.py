@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import random
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 """
 Using a class means that the crawler can manage its state, keeping track
@@ -33,11 +33,13 @@ class Crawler:
       print(f"Error occured fetching {url}: {e}\n")
       return None
   
-  def crawl(self, first_url, max_pages=10):
+  def crawl(self, first_url, max_pages=10000):
     """
     Traverse the urls and extract the text.
     """
     self.new_pages.append(first_url)
+
+    target = urlparse(first_url).netloc
 
     # Continue until all new pages are explored
     # Note: Perhaps restrict this to a specific number of travels?
@@ -71,8 +73,14 @@ class Crawler:
           if href:
             absolute_url = urljoin(url, href)
 
-            if absolute_url not in self.visited_pages and absolute_url not in self.new_pages:
-              self.new_pages.append(absolute_url)
+            # check the URL domain
+            parsed_url = urlparse(absolute_url)
+
+            # only scrape from the target site
+            if target in parsed_url.netloc:
+
+              if absolute_url not in self.visited_pages and absolute_url not in self.new_pages:
+                self.new_pages.append(absolute_url)
          
       self.visited_pages.add(url)
 
