@@ -4,7 +4,7 @@ import re
 from collections import defaultdict
 
 class Indexer:
-  def __init__(self, file_path="data/index.json"):
+  def __init__(self, file_path="../data/index.json"):
     """
     defaultdict ensures that when we lookup a word thats not already in the
     dictionary, it won't return a KeyError and instead will build a nested 

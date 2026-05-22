@@ -41,7 +41,7 @@ def main():
     elif command == 'print':
       if argument:
         data = indexer.get_word(argument)
-        print(f"Data for '{argument}': {data}")
+        print(f"Data for '{argument}': {dict(data)}")
       else:
         print("Please provide a word to grab statistics for: print <word>")
 
